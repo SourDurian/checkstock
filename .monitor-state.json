@@ -9,24 +9,24 @@
       "lastAvailability": null,
       "firstAlertAt": null,
       "reminderSent": false,
-      "consecutiveFailures": 2,
-      "failureNotified": false
+      "consecutiveFailures": 3,
+      "failureNotified": true
     },
     "tri-basic": {
       "lastStatus": null,
       "lastAvailability": null,
       "firstAlertAt": null,
       "reminderSent": false,
-      "consecutiveFailures": 2,
-      "failureNotified": false
+      "consecutiveFailures": 3,
+      "failureNotified": true
     },
     "cn2-basic": {
       "lastStatus": null,
       "lastAvailability": null,
       "firstAlertAt": null,
       "reminderSent": false,
-      "consecutiveFailures": 2,
-      "failureNotified": false
+      "consecutiveFailures": 3,
+      "failureNotified": true
     }
   }
 }
