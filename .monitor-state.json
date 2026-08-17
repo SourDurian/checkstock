@@ -1,7 +1,32 @@
 {
   "version": 1,
   "monitor": {
-    "lastHeartbeatAt": null
+    "lastHeartbeatAt": "2026-08-17T14:57:59.271Z"
   },
-  "targets": {}
+  "targets": {
+    "tri-dc2-basic": {
+      "lastStatus": null,
+      "lastAvailability": null,
+      "firstAlertAt": null,
+      "reminderSent": false,
+      "consecutiveFailures": 1,
+      "failureNotified": false
+    },
+    "tri-basic": {
+      "lastStatus": null,
+      "lastAvailability": null,
+      "firstAlertAt": null,
+      "reminderSent": false,
+      "consecutiveFailures": 1,
+      "failureNotified": false
+    },
+    "cn2-basic": {
+      "lastStatus": null,
+      "lastAvailability": null,
+      "firstAlertAt": null,
+      "reminderSent": false,
+      "consecutiveFailures": 1,
+      "failureNotified": false
+    }
+  }
 }
