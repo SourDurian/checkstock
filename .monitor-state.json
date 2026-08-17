@@ -9,7 +9,7 @@
       "lastAvailability": null,
       "firstAlertAt": null,
       "reminderSent": false,
-      "consecutiveFailures": 1,
+      "consecutiveFailures": 2,
       "failureNotified": false
     },
     "tri-basic": {
@@ -17,7 +17,7 @@
       "lastAvailability": null,
       "firstAlertAt": null,
       "reminderSent": false,
-      "consecutiveFailures": 1,
+      "consecutiveFailures": 2,
       "failureNotified": false
     },
     "cn2-basic": {
@@ -25,7 +25,7 @@
       "lastAvailability": null,
       "firstAlertAt": null,
       "reminderSent": false,
-      "consecutiveFailures": 1,
+      "consecutiveFailures": 2,
       "failureNotified": false
     }
   }
