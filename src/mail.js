@@ -85,24 +85,67 @@ export function buildTestMessage(now = new Date()) {
   };
 }
 
-export function createMailer(environment = process.env) {
-  const user = environment.GMAIL_USER?.trim();
-  const password = environment.GMAIL_APP_PASSWORD?.replace(/\s+/g, "");
-  const recipient = environment.ALERT_TO?.trim() || user;
-  if (!user || !password || !recipient) {
-    throw new Error("Missing GMAIL_USER, GMAIL_APP_PASSWORD, or ALERT_TO email configuration");
+function parsePort(value) {
+  const port = Number.parseInt(value, 10);
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error("SMTP_PORT must be an integer between 1 and 65535");
+  }
+  return port;
+}
+
+function parseSecure(value, port) {
+  if (value === undefined || String(value).trim() === "") return port === 465;
+  const normalized = String(value).trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  throw new Error("SMTP_SECURE must be true or false");
+}
+
+export function resolveMailConfiguration(environment = process.env) {
+  const host = environment.SMTP_HOST?.trim();
+  let user;
+  let password;
+  let transportOptions;
+  if (host) {
+    user = environment.SMTP_USER?.trim();
+    password = environment.SMTP_PASSWORD?.replace(/\s+/g, "");
+    if (!user || !password) {
+      throw new Error("SMTP_USER and SMTP_PASSWORD are required with SMTP_HOST");
+    }
+    const port = parsePort(environment.SMTP_PORT?.trim() || "465");
+    transportOptions = {
+      host,
+      port,
+      secure: parseSecure(environment.SMTP_SECURE, port),
+      auth: { user, pass: password },
+    };
+  } else if (environment.GMAIL_USER?.trim() && environment.GMAIL_APP_PASSWORD) {
+    user = environment.GMAIL_USER.trim();
+    password = environment.GMAIL_APP_PASSWORD.replace(/\s+/g, "");
+    transportOptions = { service: "gmail", auth: { user, pass: password } };
+  } else if (environment.SMTP_USER || environment.SMTP_PASSWORD) {
+    throw new Error("SMTP_HOST is required when SMTP_USER or SMTP_PASSWORD is set");
+  } else {
+    throw new Error("Configure SMTP_HOST/SMTP_USER/SMTP_PASSWORD or Gmail compatibility secrets");
   }
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user, pass: password },
-  });
+  const recipient = environment.ALERT_TO?.trim() || user;
+  return {
+    transportOptions,
+    from: environment.MAIL_FROM?.trim() || `VMISS Stock Monitor <${user}>`,
+    recipient,
+  };
+}
+
+export function createMailer(environment = process.env, createTransport = nodemailer.createTransport) {
+  const configuration = resolveMailConfiguration(environment);
+  const transporter = createTransport(configuration.transportOptions);
 
   return {
     async send(message) {
       return transporter.sendMail({
-        from: `VMISS Stock Monitor <${user}>`,
-        to: recipient,
+        from: configuration.from,
+        to: configuration.recipient,
         subject: message.subject,
         text: message.text,
         html: message.html,

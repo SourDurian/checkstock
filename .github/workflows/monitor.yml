@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       send_test_email:
-        description: Send a Gmail test message without checking stock
+        description: Send an SMTP test message without checking stock
         required: false
         default: false
         type: boolean
@@ -40,6 +40,12 @@ jobs:
         env:
           TEST_EMAIL: ${{ inputs.send_test_email || false }}
           MONITOR_HEADLESS: false
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           ALERT_TO: ${{ secrets.ALERT_TO }}
