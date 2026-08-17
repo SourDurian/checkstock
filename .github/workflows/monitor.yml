@@ -35,8 +35,15 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
-      - name: Check stock
-        run: xvfb-run --auto-servernum pnpm monitor
+        if: ${{ !inputs.send_test_email }}
+      - name: Send test email or check stock
+        shell: bash
+        run: |
+          if [[ "${TEST_EMAIL}" == "true" ]]; then
+            pnpm monitor
+          else
+            xvfb-run --auto-servernum pnpm monitor
+          fi
         env:
           TEST_EMAIL: ${{ inputs.send_test_email || false }}
           MONITOR_HEADLESS: false
